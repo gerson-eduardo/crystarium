@@ -1,5 +1,6 @@
 package io.data_dives.msusers.model;
 
+import io.data_dives.msusers.dto.user.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +23,11 @@ public class User {
     private String password;
     private ZonedDateTime created;
     private ZonedDateTime modified;
+
+    public User(CreateUserDto dto){
+        this.name = dto.getName();
+        this.cpf = dto.getCpf();
+        this.email = dto.getEmail();
+        this.password = dto.getPassword();
+    }
 }
