@@ -57,9 +57,9 @@ public class UserController {
         }
     }
 
+    @GetMapping("/user")
     @Operation(summary = "Select all users in the database")
     @ApiResponse(responseCode = "200", description = "Users returned sucessfully")
-    @GetMapping("/user")
     public ResponseEntity<List<SelectUserDto>> selectAll(){
         return ResponseEntity.ok(service.selectAll());
     }
