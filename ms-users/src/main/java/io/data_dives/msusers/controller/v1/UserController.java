@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 @Tag(name = "user-controller")
@@ -49,5 +51,12 @@ public class UserController {
         }catch (UserNotFoundException e){
             return new ResponseEntity<>(HttpStatusCode.valueOf(404));
         }
+    }
+
+    @Operation(summary = "Select all users in the database")
+    @ApiResponse(responseCode = "200", description = "Users returned sucessfully")
+    @GetMapping("/user")
+    public ResponseEntity<List<SelectUserDto>> selectAll(){
+        return ResponseEntity.ok(service.selectAll());
     }
 }
