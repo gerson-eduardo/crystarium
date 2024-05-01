@@ -22,7 +22,7 @@ public class UserService {
     public void createUser(CreateUserDto dto){
         //checks if user exist
         User user = repository.findByCpf(dto.getCpf()).orElse(null);
-        if(user == null){
+        if(user != null){
             return;
         }
 
