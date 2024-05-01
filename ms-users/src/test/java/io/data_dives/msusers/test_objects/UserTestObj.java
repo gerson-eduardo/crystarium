@@ -1,6 +1,7 @@
 package io.data_dives.msusers.test_objects;
 
 import io.data_dives.msusers.dto.user.CreateUserDto;
+import io.data_dives.msusers.dto.user.SelectUserDto;
 import io.data_dives.msusers.model.User;
 
 import java.time.ZoneId;
@@ -15,6 +16,10 @@ public class UserTestObj {
     public static User USER2 = new User(2L, "Nami", "11144477736", "free@gnomemail.sea", "orange.p1rate", time2,  time2);
     public static List<User> USER_LIST = Arrays.asList(USER1, USER2);
 
-    public static CreateUserDto USER_DTO1 = new CreateUserDto(USER1);
-    public static CreateUserDto USER_DTO2 = new CreateUserDto(USER2);
+    public static CreateUserDto C_USER_DTO1 = new CreateUserDto(USER1);
+    public static CreateUserDto C_USER_DTO2 = new CreateUserDto(USER2);
+
+    public static SelectUserDto S_USER_DTO1 = new SelectUserDto(USER1);
+    public static SelectUserDto S_USER_DTO2 = new SelectUserDto(USER2);
+    public static List<SelectUserDto> S_DTO_LIST = Arrays.asList(S_USER_DTO1, S_USER_DTO2);
 }
