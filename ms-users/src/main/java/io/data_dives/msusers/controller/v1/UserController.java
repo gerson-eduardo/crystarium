@@ -25,9 +25,10 @@ public class UserController {
 
     @PostMapping("/user")
     @Operation(summary = "Creates a user in the database", method = "POST")
-    @ApiResponses(
-            @ApiResponse(responseCode = "201", description = "User created sucessfully")
-    )
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "201", description = "User created sucessfully"),
+            @ApiResponse(responseCode = "409", description = "User already exists")
+    })
     public ResponseEntity<String > createUser(@RequestBody CreateUserDto dto){
         try {
             service.createUser(dto);
