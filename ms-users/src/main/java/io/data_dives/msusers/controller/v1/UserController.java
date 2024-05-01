@@ -71,7 +71,7 @@ public class UserController {
     })
     public ResponseEntity<String> updateEmail(@RequestBody HashMap<String, String> map){
         try {
-            service.updateEmail(map.get("email"), map.get("cpf"));
+            service.updateEmail(map.get("cpf"), map.get("email"));
             return ResponseEntity.ok("Email updated sucessfully");
         }catch (EmailConflictException e){
             return ResponseEntity.status(409).body("Email already in use");
