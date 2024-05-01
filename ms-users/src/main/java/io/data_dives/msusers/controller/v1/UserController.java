@@ -1,6 +1,7 @@
 package io.data_dives.msusers.controller.v1;
 
 import io.data_dives.msusers.dto.user.CreateUserDto;
+import io.data_dives.msusers.ex.UserConflictException;
 import io.data_dives.msusers.model.User;
 import io.data_dives.msusers.service.v1.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,11 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "User created sucessfully")
     )
     public ResponseEntity<String > createUser(@RequestBody CreateUserDto dto){
-        service.createUser(dto);
-        return ResponseEntity.status(201).body("User created sucessfully!");
+        try {
+            service.createUser(dto);
+            return ResponseEntity.status(201).body("User created sucessfully!");
+        }catch (UserConflictException e){
+            return ResponseEntity.status(409).body("User already exists");
+        }
     }
 }
