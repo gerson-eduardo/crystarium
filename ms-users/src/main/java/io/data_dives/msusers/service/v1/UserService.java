@@ -1,6 +1,7 @@
 package io.data_dives.msusers.service.v1;
 
 import io.data_dives.msusers.dto.user.CreateUserDto;
+import io.data_dives.msusers.ex.UserConflictException;
 import io.data_dives.msusers.model.User;
 import io.data_dives.msusers.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class UserService {
         //checks if user exist
         User user = repository.findByCpf(dto.getCpf()).orElse(null);
         if(user != null){
-            return;
+            throw new UserConflictException("User already exist in the database");
         }
 
         //check valid cpf
