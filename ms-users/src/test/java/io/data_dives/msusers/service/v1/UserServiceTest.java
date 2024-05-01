@@ -1,20 +1,20 @@
 package io.data_dives.msusers.service.v1;
 
+import io.data_dives.msusers.dto.user.SelectUserDto;
+import io.data_dives.msusers.ex.user.EmailConflictException;
+import io.data_dives.msusers.ex.user.UserNotFoundException;
 import io.data_dives.msusers.model.User;
 import io.data_dives.msusers.repository.UserRepository;
-import org.checkerframework.checker.units.qual.N;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +29,7 @@ class UserServiceTest {
     @Mock
     private Clock clock;
 
-    private static ZonedDateTime NOW = ZonedDateTime.of(
+    private static final ZonedDateTime NOW = ZonedDateTime.of(
             2024,
             4,
             30,
@@ -43,22 +43,85 @@ class UserServiceTest {
     @InjectMocks
     private UserService service;
 
-    @BeforeEach()
-    void setup(){
-        when(clock.getZone()).thenReturn(NOW.getZone());
-        when(clock.instant()).thenReturn(NOW.toInstant());
-    }
 
     @Test
     void createUser() {
         User user = USER1;
         user.setId(null);
-        when(repository.findByCpf(USER_DTO1.getCpf())).thenReturn(Optional.empty());
+
+        when(clock.getZone()).thenReturn(NOW.getZone());
+        when(clock.instant()).thenReturn(NOW.toInstant());
+        when(repository.findByCpf(C_USER_DTO1.getCpf())).thenReturn(Optional.empty());
         when(repository.save(user)).thenReturn(USER1);
 
-        assertDoesNotThrow(() -> service.createUser(USER_DTO1));
+        assertDoesNotThrow(() -> service.createUser(C_USER_DTO1));
 
-        verify(repository, atLeast(1)).findByCpf(USER_DTO1.getCpf());
+        verify(repository, atLeast(1)).findByCpf(C_USER_DTO1.getCpf());
         verify(repository, atLeast(1)).save(USER1);
+    }
+
+    @Test
+    void selectByCpf(){
+        //User exist
+        {
+            when(repository.findByCpf(USER1.getCpf())).thenReturn(Optional.of(USER1));
+
+            SelectUserDto dto = service.selectByCpf(USER1.getCpf());
+
+            verify(repository, atLeast(1)).findByCpf(USER1.getCpf());
+            assertEquals(USER1.getEmail(), dto.getEmail());
+        }
+
+        //User doesn't exist
+        {
+            when(repository.findByCpf("00000000000")).thenReturn(Optional.empty());
+
+            assertThrows(UserNotFoundException.class, () -> service.selectByCpf("00000000000"));
+
+            verify(repository, atLeast(1)).findByCpf("00000000000");
+        }
+    }
+
+    @Test
+    void selectAll(){
+        when(repository.findAll()).thenReturn(USER_LIST);
+
+        List<SelectUserDto> S_DTO_L = service.selectAll();
+
+        verify(repository, atLeast(1)).findAll();
+        assertEquals(USER_LIST.getFirst().getEmail(), S_DTO_L.getFirst().getEmail());
+    }
+
+    @Test
+    void updateEmail(){
+        // User exist and email is not in use
+        {
+            when(repository.findByCpf(USER1.getCpf())).thenReturn(Optional.of(USER1));
+            when(repository.findByEmail("new@mail.com")).thenReturn(Optional.empty());
+
+            assertDoesNotThrow(() -> service.updateEmail(USER1.getCpf(), "new@mail.com"));
+
+            verify(repository, atLeast(1)).findByCpf(USER1.getCpf());
+            verify(repository, atLeast(1)).findByEmail("new@mail.com");
+        }
+
+        // Email is already in use
+        {
+            when(repository.findByEmail("used@mail.com")).thenReturn(Optional.of(USER1));
+
+            assertThrows(EmailConflictException.class, () -> service.updateEmail(USER1.getCpf(), "used@mail.com"));
+
+            verify(repository, atLeast(1)).findByEmail("used@mail.com");
+        }
+
+        // User not found
+        {
+            when(repository.findByCpf("00011100011")).thenReturn(Optional.empty());
+
+            assertThrows(UserNotFoundException.class, () -> service.updateEmail("00011100011", "new@mail.com"));
+
+            verify(repository, times(2)).findByEmail("new@mail.com");
+            verify(repository, atLeast(1)).findByCpf("00011100011");
+        }
     }
 }
