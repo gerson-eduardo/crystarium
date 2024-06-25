@@ -69,7 +69,12 @@ class UserControllerTest {
     }
 
     @Test
-    void selectAll() {
+    void selectAll() throws Exception {
+        when(service.selectAll()).thenReturn(S_DTO_LIST);
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/user")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
