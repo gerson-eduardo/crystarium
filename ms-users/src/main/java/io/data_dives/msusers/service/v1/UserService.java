@@ -42,7 +42,6 @@ public class UserService {
         //Add created time and modified time
         user.setCreated(ZonedDateTime.now(clock));
         user.setModified(ZonedDateTime.now(clock));
-
         repository.save(user);
     }
 
@@ -76,6 +75,7 @@ public class UserService {
         }
 
         user.setEmail(email);
+        user.setModified(ZonedDateTime.now(clock));
         repository.save(user);
     }
 }
