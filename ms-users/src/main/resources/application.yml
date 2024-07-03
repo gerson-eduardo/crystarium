@@ -2,5 +2,8 @@ spring:
   application:
     name: ms-users
   profiles:
-    active: dev
+    active: local
 
+server:
+  servlet:
+    context-path: /ms-users/
