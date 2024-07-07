@@ -1,0 +1,20 @@
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:postgresql://sqldb:5432/crystarium_db
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

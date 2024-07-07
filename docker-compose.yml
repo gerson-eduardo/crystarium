@@ -16,7 +16,7 @@ services:
           cpus: '2'
           memory: 200M
     volumes:
-      - ./data_volume:/var/lib/postgresql/data
+      - cry-sql-db:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -75,3 +75,5 @@ services:
         limits:
           cpus: '2'
           memory: 200M
+volumes:
+  cry-sql-db:
