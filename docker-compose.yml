@@ -75,5 +75,18 @@ services:
         limits:
           cpus: '2'
           memory: 200M
+  ms-proposal:
+    image: ms-proposal
+    container_name: ms-proposal
+    build:
+      context: ./ms-proposal
+      dockerfile: Dockerfile
+      args:
+        SPRING_PROFILE: prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
 volumes:
   cry-sql-db:
