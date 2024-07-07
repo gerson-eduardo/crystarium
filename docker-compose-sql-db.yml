@@ -1,0 +1,35 @@
+version: '3'
+services:
+  sqldb:
+    image: postgres
+    container_name: sql_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: crystarium_db
+    ports:
+      - 5432:5432
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
+    volumes:
+      - cry-sql-db:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mail@estinien.web
+      PGADMIN_DEFAULT_PASSWORD: drag00nPassword
+    ports:
+      - 5050:80
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
+volumes:
+  cry-sql-db:
