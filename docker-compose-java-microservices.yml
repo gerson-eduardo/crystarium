@@ -1,0 +1,58 @@
+version: '3'
+services:
+  api-gateway:
+    image: api-gateway
+    container_name: api-gateway
+    ports:
+      - 8080:8080
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+      args:
+        SPRING_PROFILE: prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
+  eureka-server:
+    image: eureka-server 
+    container_name: eureka-server
+    ports:
+      - 8761:8761
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+      args:
+        SPRING_PROFILE: prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
+  ms-users:
+    image: ms-users
+    container_name: ms-users
+    build:
+      context: ./ms-users
+      dockerfile: Dockerfile
+      args:
+        SPRING_PROFILE: prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
+  ms-proposal:
+    image: ms-proposal
+    container_name: ms-proposal
+    build:
+      context: ./ms-proposal
+      dockerfile: Dockerfile
+      args:
+        SPRING_PROFILE: prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
