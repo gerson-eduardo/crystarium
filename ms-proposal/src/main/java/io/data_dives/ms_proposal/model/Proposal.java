@@ -34,4 +34,9 @@ public class Proposal {
         this.description = dto.getDescription();
         this.cpf = dto.getCpf();
     }
+
+    public Proposal removeId(){
+        setId(null);
+        return this;
+    }
 }
