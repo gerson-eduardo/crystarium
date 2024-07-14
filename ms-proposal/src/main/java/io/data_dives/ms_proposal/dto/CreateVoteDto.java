@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class CreateVoteDto {
     private Long id;
     private String cpf;
+    private Boolean approved;
 
     public CreateVoteDto(Vote vote){
         this.id = vote.getProposal().getId();
