@@ -16,6 +16,10 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
 eureka:
   client:
     fetch-registry: true

@@ -31,6 +31,17 @@ services:
         limits:
           cpus: '2'
           memory: 200M
+  rabbitmq:
+    image: rabbitmq:3.13.4-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 200M
   api-gateway:
     image: api-gateway
     container_name: api-gateway
