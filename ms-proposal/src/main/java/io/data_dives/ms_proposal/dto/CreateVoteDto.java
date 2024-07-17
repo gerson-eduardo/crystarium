@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 public class CreateVoteDto {
     private Long id;
     private String cpf;
-    private Boolean approved;
+    private boolean approved;
 
-    public CreateVoteDto(Vote vote){
+    public CreateVoteDto(Vote vote) {
         this.id = vote.getProposal().getId();
         this.cpf = vote.getCpf();
+        this.approved = vote.isApproved();
     }
 }
