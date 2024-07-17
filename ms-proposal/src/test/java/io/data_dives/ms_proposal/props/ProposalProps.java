@@ -15,8 +15,8 @@ public class ProposalProps {
     public static ZonedDateTime NOW = ZonedDateTime.of(2024, 7, 7, 17, 32, 46, 0, Clock.systemDefaultZone().getZone());
     public static List<Proposal> PROPOSALS = new ArrayList<>(Arrays.asList(
             new Proposal(1L, "Proposal 1 title", "This is a description of proposal 1", false, "11144477735", NOW, NOW),
-            new Proposal(1L, "Proposal 2 title", "This is a description of proposal 2", true, "11144477735", NOW.plusDays(1), NOW.plusDays(1)),
-            new Proposal(1L, "Proposal 3 title", "This is a description of proposal 3", false, "11144477735", NOW, NOW.plusMinutes(5))
+            new Proposal(2L, "Proposal 2 title", "This is a description of proposal 2", true, "11144477735", NOW.plusDays(1), NOW.plusDays(1)),
+            new Proposal(3L, "Proposal 3 title", "This is a description of proposal 3", false, "11144477735", NOW, NOW.plusMinutes(5))
     ));
     public static Proposal PROPOSAL1 = PROPOSALS.getFirst();
     public static Proposal PROPOSAL2 = PROPOSALS.get(1);

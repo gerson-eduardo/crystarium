@@ -27,7 +27,7 @@ public class Vote {
 
     public Vote(CreateVoteDto dto){
         this.cpf = dto.getCpf();
-        this.approved = dto.getApproved();
+        this.approved = dto.isApproved();
     }
 
     public Vote removeId(){

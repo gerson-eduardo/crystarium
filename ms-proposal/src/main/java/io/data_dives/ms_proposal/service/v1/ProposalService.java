@@ -4,6 +4,7 @@ import io.data_dives.ms_proposal.dto.CreateProposalDto;
 import io.data_dives.ms_proposal.model.Proposal;
 import io.data_dives.ms_proposal.repository.ProposalRepository;
 import io.data_dives.ms_proposal.service.IProposalService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class ProposalService implements IProposalService {
     }
 
     @Override
+    @Transactional
     public void createProposal(CreateProposalDto dto){
         ZonedDateTime now = ZonedDateTime.now(clock);
         Proposal proposal = new Proposal(dto);
