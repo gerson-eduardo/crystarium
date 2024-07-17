@@ -28,4 +28,9 @@ public class Pool {
     private ZonedDateTime modified;
     @Column(name = "is_open")
     private boolean open;
+
+    public Pool removeId(){
+        this.setId(null);
+        return this;
+    }
 }
