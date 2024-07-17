@@ -2,6 +2,8 @@ package io.data_dives.ms_proposal.controller.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.data_dives.ms_proposal.ex.PoolAlreadyStartedException;
+import io.data_dives.ms_proposal.ex.PoolNotEndedException;
+import io.data_dives.ms_proposal.ex.PoolNotFoundException;
 import io.data_dives.ms_proposal.ex.ProposalNotFoundException;
 import io.data_dives.ms_proposal.service.v1.PoolService;
 import org.junit.jupiter.api.Test;
@@ -13,8 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 
 @WebMvcTest(PoolController.class)
 class PoolControllerTest {
@@ -50,6 +51,26 @@ class PoolControllerTest {
     }
 
     @Test
-    void endPool() {
+    void endPool() throws Exception {
+        doNothing().when(service).endPool(1L);
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/pool/end/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void endPool_pool_not_found() throws Exception {
+        doThrow(PoolNotFoundException.class).when(service).endPool(1L);
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/pool/end/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void endPool_pool_time_not_finished() throws Exception {
+        doThrow(PoolNotEndedException.class).when(service).endPool(1L);
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/pool/end/1"))
+                .andExpect(MockMvcResultMatchers.status().isConflict());
     }
 }
