@@ -2,8 +2,7 @@ package io.data_dives.ms_proposal.controller.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.data_dives.ms_proposal.ex.ProposalNotFoundException;
-import io.data_dives.ms_proposal.ex.VoteConflictException;
+import io.data_dives.ms_proposal.ex.*;
 import io.data_dives.ms_proposal.service.v1.VoteService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,15 +45,24 @@ class VoteControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
-
     @Test
-    void createVote_proposal_not_found() throws Exception {
-        doThrow(ProposalNotFoundException.class).when(service).createVote(CREATE_VOTE_DTO1);
+    void createVote_pool_not_found() throws Exception{
+        doThrow(PoolNotFoundException.class).when(service).createVote(CREATE_VOTE_DTO1);
 
         mvc.perform(MockMvcRequestBuilders.post("/api/v1/vote")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(CREATE_VOTE_DTO1)))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void createVote_pool_already_ended() throws Exception{
+        doThrow(PoolAlreadyEndedException.class).when(service).createVote(CREATE_VOTE_DTO1);
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/vote")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(CREATE_VOTE_DTO1)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -65,5 +73,15 @@ class VoteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(CREATE_VOTE_DTO1)))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
+    }
+
+    @Test
+    void createVote_invalid_user() throws Exception {
+        doThrow(InvalidUserException.class).when(service).createVote(CREATE_VOTE_DTO1);
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/vote")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(CREATE_VOTE_DTO1)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

@@ -30,7 +30,7 @@ public class VoteController {
         }catch (VoteConflictException e){
             return new ResponseEntity<>(HttpStatusCode.valueOf(409));
         }catch(InvalidUserException e){
-            return new ResponseEntity<>(HttpStatusCode.valueOf(404));
+            return new ResponseEntity<>(HttpStatusCode.valueOf(400));
         }
     }
 }

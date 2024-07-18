@@ -4,6 +4,7 @@ import io.data_dives.ms_proposal.dto.CreateProposalDto;
 import io.data_dives.ms_proposal.ex.InvalidUserException;
 import io.data_dives.ms_proposal.service.IProposalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,10 +22,9 @@ public class ProposalController {
             service.createProposal(dto);
             return ResponseEntity.status(201).body("Proposal Created Sucessfully");
         }catch(InvalidUserException e){
-            return ResponseEntity.status(404).body("Invalid user");
+            return new ResponseEntity<>(HttpStatusCode.valueOf(400));
         }catch(ResponseStatusException e){
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(400).body("Error while creating proposal!");
+            return new ResponseEntity<>(HttpStatusCode.valueOf(500));
         }
     }
 }
