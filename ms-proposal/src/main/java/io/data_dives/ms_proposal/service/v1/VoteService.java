@@ -1,13 +1,12 @@
 package io.data_dives.ms_proposal.service.v1;
 
+import io.data_dives.ms_proposal.dto.BooleanMessageResponse;
 import io.data_dives.ms_proposal.dto.CreateVoteDto;
-import io.data_dives.ms_proposal.ex.PoolAlreadyEndedException;
-import io.data_dives.ms_proposal.ex.PoolNotFoundException;
-import io.data_dives.ms_proposal.ex.ProposalNotFoundException;
-import io.data_dives.ms_proposal.ex.VoteConflictException;
+import io.data_dives.ms_proposal.ex.*;
 import io.data_dives.ms_proposal.model.Pool;
 import io.data_dives.ms_proposal.model.Proposal;
 import io.data_dives.ms_proposal.model.Vote;
+import io.data_dives.ms_proposal.producer.RequestProducer;
 import io.data_dives.ms_proposal.repository.PoolRepository;
 import io.data_dives.ms_proposal.repository.ProposalRepository;
 import io.data_dives.ms_proposal.repository.VoteRepository;
@@ -26,19 +25,26 @@ public class VoteService implements IVoteService {
     private VoteRepository voteRepository;
     private PoolRepository poolRepository;
     private Clock clock;
+    private RequestProducer producer;
 
     @Autowired
-    public VoteService(ProposalRepository proposalRepository, VoteRepository voteRepository, PoolRepository poolRepository, Clock clock) {
+    public VoteService(ProposalRepository proposalRepository, VoteRepository voteRepository, PoolRepository poolRepository, Clock clock, RequestProducer producer) {
         this.proposalRepository = proposalRepository;
         this.voteRepository = voteRepository;
         this.poolRepository = poolRepository;
         this.clock = clock;
+        this.producer = producer;
     }
 
     @Override
     @Transactional
     public void createVote(CreateVoteDto dto) {
         ZonedDateTime now = ZonedDateTime.now(clock);
+
+        BooleanMessageResponse response = producer.validateUser(dto.getCpf());
+        if(!response.isResult()){
+            throw new InvalidUserException(response.getMessage());
+        }
 
         Pool pool = poolRepository.findByProposal_Id(dto.getId()).orElse(null);
         if(pool == null){

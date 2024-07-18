@@ -2,6 +2,8 @@ package io.data_dives.ms_proposal.controller.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.data_dives.ms_proposal.ex.InvalidUserException;
+import io.data_dives.ms_proposal.ex.PoolAlreadyEndedException;
 import io.data_dives.ms_proposal.service.v1.ProposalService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static io.data_dives.ms_proposal.props.ProposalProps.*;
+import static org.mockito.Mockito.doThrow;
 
 @WebMvcTest(ProposalController.class)
 class ProposalControllerTest {
@@ -36,5 +39,15 @@ class ProposalControllerTest {
                 .content(mapper.writeValueAsString(CREATE_PROPOSAL_DTO1))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    void createProposal_invalid_user() throws Exception {
+        doThrow(InvalidUserException.class).when(service).createProposal(CREATE_PROPOSAL_DTO1);
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/proposal")
+                        .content(mapper.writeValueAsString(CREATE_PROPOSAL_DTO1))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

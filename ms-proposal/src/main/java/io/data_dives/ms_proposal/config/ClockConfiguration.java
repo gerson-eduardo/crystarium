@@ -1,4 +1,4 @@
-package io.data_dives.ms_proposal.conf;
+package io.data_dives.ms_proposal.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

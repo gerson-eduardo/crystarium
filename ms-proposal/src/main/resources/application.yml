@@ -3,6 +3,15 @@ spring:
     name: ms-proposal
   profiles:
     active: local
+
+rabbitmq:
+  exchange:
+    name: request_exchange
+  queue:
+    name: validate_user_queue
+  routing:
+    key: user
+
 server:
   servlet:
     context-path: /ms-proposal/

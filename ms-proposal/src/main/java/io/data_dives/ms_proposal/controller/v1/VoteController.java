@@ -29,6 +29,8 @@ public class VoteController {
             return new ResponseEntity<>(HttpStatusCode.valueOf(400));
         }catch (VoteConflictException e){
             return new ResponseEntity<>(HttpStatusCode.valueOf(409));
+        }catch(InvalidUserException e){
+            return new ResponseEntity<>(HttpStatusCode.valueOf(400));
         }
     }
 }
