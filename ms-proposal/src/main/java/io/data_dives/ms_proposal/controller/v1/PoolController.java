@@ -5,6 +5,10 @@ import io.data_dives.ms_proposal.ex.PoolNotEndedException;
 import io.data_dives.ms_proposal.ex.PoolNotFoundException;
 import io.data_dives.ms_proposal.ex.ProposalNotFoundException;
 import io.data_dives.ms_proposal.service.IPoolService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
+@Tag(name = "pool-controller")
 public class PoolController {
 
     @Autowired
     private IPoolService service;
 
     @PostMapping("/pool/start/{id}")
+    @Operation(summary = "Start a votation pool in the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pool is created sucessfully"),
+            @ApiResponse(responseCode = "404", description = "Propossal was not found"),
+            @ApiResponse(responseCode = "409", description = "A pool for this proposal was already initiated"),
+    }
+    )
     public ResponseEntity<String> startPool(@PathVariable Long id){
         try {
             service.createPool(id);
@@ -35,6 +47,13 @@ public class PoolController {
     }
 
     @PostMapping("/pool/end/{id}")
+    @Operation(summary = "Ends a votation pool in the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pool is sucessfully ended"),
+            @ApiResponse(responseCode = "404", description = "Pool was not found"),
+            @ApiResponse(responseCode = "409", description = "The pool end time is not finished"),
+    }
+    )
     public ResponseEntity<String> endPool(@PathVariable Long id){
         try {
             service.endPool(id);
